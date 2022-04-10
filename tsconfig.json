@@ -39,6 +39,9 @@
             "@components/*": [
                 "./src/components/*"
             ],
+            "@styled-components/*": [
+                "./src/styled-components/*"
+            ],
         },
     },
     "include": [

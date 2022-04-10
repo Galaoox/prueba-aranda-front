@@ -1,7 +1,7 @@
 import { DataFormDialog } from "@models/DataFormDialog.model";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material"
-import { FC } from "react";
-
+import { FC, useState } from "react";
+import { DataProductForm } from '@models/DataProductForm.model';
 
 interface IProps {
     data: DataFormDialog;
@@ -9,6 +9,8 @@ interface IProps {
 }
 
 export const ProductForm: FC<IProps> = ({ data: { id, open }, onClose }) => {
+    const [form, setForm] = useState(new DataProductForm());
+
 
     return (
         <Dialog open={open} onClose={() => onClose(false)}>

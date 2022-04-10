@@ -106,6 +106,10 @@ export const ProductsCatalog = () => {
     }
 
     const createProduct = () => onOpenForm();
+    const editProduct = () => onOpenForm(idProductSelected);
+    const deleteProduct = () => console.log(idProductSelected);
+
+
 
     const onOpenForm = (id: number | null = null) => {
         setDataForm({
@@ -118,8 +122,8 @@ export const ProductsCatalog = () => {
         <>
             <ButtonsActions variant="contained" aria-label="outlined primary button group">
                 <Button color="success" onClick={createProduct}>Crear</Button>
-                <Button color="primary" disabled={!idProductSelected}>Editar</Button>
-                <Button color="error" disabled={!idProductSelected}>Eliminar</Button>
+                <Button color="primary" disabled={!idProductSelected} onClick={editProduct}>Editar</Button>
+                <Button color="error" disabled={!idProductSelected} onClick={deleteProduct}>Eliminar</Button>
             </ButtonsActions>
             <ContainerTable>
                 <DataGrid

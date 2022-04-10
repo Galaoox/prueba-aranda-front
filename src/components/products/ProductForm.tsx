@@ -10,29 +10,50 @@ interface IProps {
 
 export const ProductForm: FC<IProps> = ({ data: { id, open }, onClose }) => {
 
-
-
     return (
         <Dialog open={open} onClose={() => onClose(false)}>
-            <DialogTitle>Subscribe</DialogTitle>
+            <DialogTitle>{id ? 'Editar' : 'Crear'} producto</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    To subscribe to this website, please enter your email address here. We
-                    will send updates occasionally.
-                </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     id="name"
-                    label="Email Address"
+                    label="Nombre"
                     type="email"
                     fullWidth
                     variant="standard"
                 />
+                <TextField
+                    margin="dense"
+                    id="name"
+                    label="Descripcion"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                />
+                <TextField
+                    margin="dense"
+                    id="name"
+                    label="Categoria"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                />
+                <Button
+                    variant="contained"
+                    component="label"
+                    fullWidth
+                >
+                    Imagen
+                    <input
+                        type="file"
+                        hidden
+                    />
+                </Button>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => onClose(false)}>Cancel</Button>
-                <Button onClick={() => onClose(false)}>Subscribe</Button>
+                <Button onClick={() => onClose(false)}>Cancelar</Button>
+                <Button onClick={() => onClose(false)}>Guardar</Button>
             </DialogActions>
         </Dialog >
     )

@@ -42,6 +42,9 @@
             "@styled-components/*": [
                 "./src/styled-components/*"
             ],
+            "@hooks/*": [
+                "./src/hooks/*"
+            ],
         },
     },
     "include": [

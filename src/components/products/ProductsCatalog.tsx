@@ -1,16 +1,19 @@
 import styled from "@emotion/styled";
+import useFetchAndLoad from "@hooks/useFetchAndLoad";
 import { FormFilters } from "@models/FormFilters.model";
 import { IProduct } from "@models/Product.model";
-import { Pagination } from "@mui/material";
-import { getAll } from "@services/products.service";
+import { Button, ButtonGroup, Pagination } from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { getProducts } from "@services/products.service";
 import { ChangeEvent, useEffect, useState } from "react";
-import { ProductCard } from "./ProductCard";
-import { ProductCatalogFilters } from "./ProductCatalogFilters";
+
+
 
 export const ProductsCatalog = () => {
+    const { loading, callEndpoint } = useFetchAndLoad();
     const [products, setProducts] = useState<IProduct[]>([
         {
-            id: 1,
+            id: 999,
             name: "Producto 1",
             image: "https://via.placeholder.com/150",
             category: "test",
@@ -52,51 +55,80 @@ export const ProductsCatalog = () => {
             description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem necessitatibus hic perferendis adipisci odio cumque voluptatem tempore molestias odit, perspiciatis ratione incidunt vitae eveniet similique obcaecati doloribus quos dolores eos porro! Laborum eveniet quod id dolore dolor maiores doloribus commodi! Sed optio tempora exercitationem aspernatur aliquid. Minima impedit id voluptatibus.",
         },
     ]);
+    const [filters, setFilters] = useState<FormFilters>(new FormFilters());
+    const [currentPage, setCurrentPage] = useState(1);
+    const [idProductSelected, setIdProductSelected] = useState<any>();
+    const columns: GridColDef[] = [
+        {
+            field: 'image',
+            headerName: 'Imagen',
+            flex: 1,
+            sortable: false,
+            renderCell: (params) => <ImageProduct src={params.value} alt={params.value} />
+        },
+        { field: 'name', headerName: 'Nombre', flex: 1 },
+        { field: 'description', headerName: 'Descripcion', flex: 1 },
+        { field: 'category', headerName: 'Categoria', sortable: false, flex: 1 },
+    ];
 
     const getTotalPages = () => {
         return Math.ceil(products.length / 5);
     }
 
     const handleChangePage = (e: ChangeEvent<unknown>, page: number) => {
-        console.log(page);
+        setCurrentPage(page);
+        getData(filters, page);
     }
 
     const handleFilters = async (filters: FormFilters) => {
-        console.log(filters);
-        const result = await getAll(filters);
-
+        setFilters(filters);
+        getData(filters, 1);
     }
 
+    const getData = async (filters: FormFilters, page: number) => {
+        try {
+            const result = await callEndpoint(getProducts(filters, page));
+        } catch (error) {
 
+        }
+    }
 
     return (
-        <div>
-            <ProductCatalogFilters handleFilters={handleFilters} />
-            <GridProducts>
-                {products.map(product => <ProductCard key={product.id} data={product} />)}
-            </GridProducts>
-            <ContainerPagination>
-                <Pagination count={getTotalPages()} onChange={handleChangePage} variant="outlined" shape="rounded" />
-            </ContainerPagination>
+        <>
+            <ButtonsActions variant="contained" aria-label="outlined primary button group">
+                <Button color="success">Crear</Button>
+                <Button color="primary" disabled={!idProductSelected}>Editar</Button>
+                <Button color="error" disabled={!idProductSelected}>Eliminar</Button>
+            </ButtonsActions>
+            <ContainerTable>
+                <DataGrid
+                    rows={products}
+                    columns={columns}
+                    rowHeight={200}
+                    disableColumnMenu
+                    onSelectionModelChange={(ids) => {
+                        setIdProductSelected(ids[0]);
+                    }}
 
-        </div>
-
-
+                />
+            </ContainerTable>
+        </>
     )
 }
 
-
-
-const GridProducts = styled.div`
-    display: grid;
-    grid-template-columns: 1;
-    margin: 2rem 0;
-    border: 0.1rem solid #ccc;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
+const ButtonsActions = styled(ButtonGroup)`
+    margin-bottom: 10px;
 `;
 
-const ContainerPagination = styled.div`
-    display: flex;
-    justify-content: center;
+const ImageProduct = styled.img`
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    margin-left: auto;
+    margin: auto;
+`;
+
+const ContainerTable = styled.div`
+    height: 45rem;
+    width: 100%;
 `;
